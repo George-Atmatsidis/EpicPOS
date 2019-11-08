@@ -1,0 +1,54 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/*
+    Created on : Apr 22, 2018, 10:30:25 PM
+    Author     : KwabenaEpic
+*/
+.sidebar{
+    -fx-background-color: #ffffff;
+
+}
+
+.btns{
+    -fx-background-color: #ffffff;
+    -fx-text-fill: black;
+    -fx-border-width: 0px 0px 0px 0px;
+    -fx-border-radius: 0px;
+    -fx-background-radius: 0px;
+}
+.btns:hover{
+    -fx-background-color: #FFA73B;
+
+}
+.btns:focused{
+
+    -fx-background-color: #ff9900;
+    -fx-text-fill: #FFFFFF;
+
+}
+
+#btnAdd{
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-font-size: 15px;
+    -fx-padding: 0px;
+    -fx-background-image: url("../images/add_black32.png");
+    /*    -fx-background-size: cover;
+        -fx-background-repeat: stretch;
+        -fx-background-position: center center;*/
+}
+#btnAdd:hover{
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-font-size: 15px;
+    -fx-padding: 0px;
+    -fx-background-image: url("../images/add_red32.png");
+    -fx-cursor: hand;
+}
+#btnAdd:pressed{
+    -fx-rotate: 100;
+    transition-delay: 5s;
+}
