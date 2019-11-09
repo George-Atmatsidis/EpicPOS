@@ -29,7 +29,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import com.sun.prism.impl.Disposer.Record;
 import database.ConnectionManager;
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
+import java.math.BigDecimal;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.sql.Connection;
@@ -42,17 +42,12 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Task;
 import javafx.event.EventHandler;
-import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
-import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 import javafx.util.Callback;
 import javafx.util.Duration;
 import net.sf.jasperreports.engine.JRException;
@@ -190,6 +185,7 @@ public class PosClientController implements Initializable {
     private Alert alert = null;
     Task copyWorker;
     ProgressDialog dialog = null;
+    private BigDecimal amountPaid;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -314,7 +310,7 @@ public class PosClientController implements Initializable {
             lblMinutes.setText(minute + "");
             lblSeconds.setText(second + "");
         }),
-             new KeyFrame(Duration.seconds(1))
+                new KeyFrame(Duration.seconds(1))
         );
         clock.setCycleCount(Animation.INDEFINITE);
         clock.play();
@@ -359,7 +355,6 @@ public class PosClientController implements Initializable {
 //        lblTotal.setText(qty + "");
         saleItems.put(rowList.getProductId(), result);
         reSetItems();
-
     }
 
     private void reSetItems() {
@@ -408,8 +403,9 @@ public class PosClientController implements Initializable {
         if (result.isPresent()) {
             qty = result.get();
         }
-        lblAmountPaid.setText(Double.parseDouble(qty) + "");
-        btnCheckout.setDisable(false);
+        amountPaid = new BigDecimal(qty);
+//        lblAmountPaid.setText(Double.parseDouble(qty) + "");
+//        btnCheckout.setDisable(false);
         return qty;
     }
 
@@ -476,7 +472,7 @@ public class PosClientController implements Initializable {
         });
         //Adding the Button to the cell
         actionColumn.setCellFactory(
-             new Callback<TableColumn<Record, Boolean>, TableCell<Record, Boolean>>() {
+                new Callback<TableColumn<Record, Boolean>, TableCell<Record, Boolean>>() {
             @Override
             public TableCell<Record, Boolean> call(TableColumn<Record, Boolean> p) {
                 return new ButtonCell();
@@ -518,7 +514,7 @@ public class PosClientController implements Initializable {
 //        parameters.put("receiptDate", dateLocal.getText());
         try {
             printFileName = JasperFillManager.fillReportToFile(
-                 sourceFileName, parameters, beanColDataSource);
+                    sourceFileName, parameters, beanColDataSource);
             if (printFileName != null) {
 
                 JasperPrintManager.printReport(printFileName, true);
@@ -533,8 +529,8 @@ public class PosClientController implements Initializable {
         try {
             JasperDesign jd = null;
             String sql = "SELECT * FROM productsbyticketnumber "
-                 + "JOIN salereports on productsbyticketnumber.ticketNumber = salereports.ticketNumber "
-                 + "WHERE productsbyticketnumber.ticketNumber = " + ticketNumber;
+                    + "JOIN salereports on productsbyticketnumber.ticketNumber = salereports.ticketNumber "
+                    + "WHERE productsbyticketnumber.ticketNumber = " + ticketNumber;
 
             jd = JRXmlLoader.load("C:/Users/KwabenaEpic/Documents/NetBeansProjects/EpicPOS/src/reports/Receipts.jrxml");
             JRDesignQuery newQuery = new JRDesignQuery();
@@ -631,16 +627,19 @@ public class PosClientController implements Initializable {
     @FXML
     private void btnTenderCashOnAction(ActionEvent event) {
         tenderType = "Cash";
-        lblBalance.setText((Double.parseDouble(showDialogCash()) - Double.parseDouble(lblTotal.getText())) + "");
-        if (Double.parseDouble(lblAmountPaid.getText()) < Double.parseDouble(lblTotal.getText())) {
-            lblBalance.setText((Double.parseDouble(showDialogCash()) - Double.parseDouble(lblTotal.getText())) + "");
-//            btnCheckout.setDisable(false);
+        while (Double.parseDouble(showDialogCash()) < Double.parseDouble(lblTotal.getText())) {
+            showDialogCash();
         }
+
+        lblBalance.setText((this.amountPaid.subtract(new BigDecimal(lblTotal.getText()))).toString());
+        lblAmountPaid.setText(this.amountPaid.toString());
+        btnCheckout.setDisable(false);
+
     }
 
     @FXML
     private void btnTenderCardOnAction(ActionEvent event) {
-  
+
     }
 
     //Define the button cell
@@ -713,7 +712,7 @@ public class PosClientController implements Initializable {
 
             } catch (SQLException ex) {
                 Logger.getLogger(PosClientController.class
-                     .getName()).log(Level.SEVERE, null, ex);
+                        .getName()).log(Level.SEVERE, null, ex);
             }
             ivUserImage.setImage(new Image(byteArrayInputStream));
         } else {
@@ -752,7 +751,6 @@ public class PosClientController implements Initializable {
 //        }
 //
 //    }
-
     private void isValidCondition() {
 //        boolean validCondition = true;
         if (dialog == null) {
@@ -763,7 +761,7 @@ public class PosClientController implements Initializable {
             dialog.setContentText("Connecting to server...");
             dialog.initModality(Modality.APPLICATION_MODAL);
             dialog.setHeaderText("");
-            
+
 //            dialog.initStyle(StageStyle.UTILITY);
             new Thread(copyWorker).start();
             dialog.showAndWait();
@@ -779,8 +777,8 @@ public class PosClientController implements Initializable {
         return new Task() {
             @Override
             protected Object call() throws Exception {
-                 final int max = 10000000;
-                   updateProgress(0, max);
+                final int max = 10000000;
+                updateProgress(0, max);
                 for (int i = 1; i <= max; i++) {
 //                    Thread.sleep(5000);
                     updateMessage("Connecting to Server...");
@@ -790,8 +788,6 @@ public class PosClientController implements Initializable {
             }
         };
     }
-    
-    
 
 //    @FXML
 //    private void checkout(ActionEvent event) {
