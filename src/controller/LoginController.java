@@ -166,7 +166,6 @@ public class LoginController implements Initializable {
                     Format formatter;
                     Date date = new Date();
 
-                    // 29-Jan-02
                     formatter = new SimpleDateFormat("yyyy-MM-dd");
                     timeStamp = formatter.format(date);
                     EmployeeLogins beans = new EmployeeLogins();
@@ -224,6 +223,3 @@ public class LoginController implements Initializable {
         return (ip.getHostName() + ticketGenerator());
     }
 }
-
-
-//~ Formatted by Jindent --- http://www.jindent.com
