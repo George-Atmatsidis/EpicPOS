@@ -630,7 +630,6 @@ public class PosClientController implements Initializable {
         while (Double.parseDouble(showDialogCash()) < Double.parseDouble(lblTotal.getText())) {
             showDialogCash();
         }
-
         lblBalance.setText((this.amountPaid.subtract(new BigDecimal(lblTotal.getText()))).toString());
         lblAmountPaid.setText(this.amountPaid.toString());
         btnCheckout.setDisable(false);
