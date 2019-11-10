@@ -248,7 +248,9 @@
     -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,1) , 3, 0.0 , 0 , 3 );
 }
 
-.auto-complete-popup > .list-view {
+.auto-complete-popup > .list-view {     
+        -fx-border-width: 0.0px;
+    -fx-border-radius: 0.0px;
     -fx-background-color:
         linear-gradient(to bottom,
             derive(-fx-color,-17%),
@@ -257,15 +259,20 @@
         -fx-control-inner-background;
     -fx-background-insets: -1 -2 -1 -1, 0 -1 0 0;
     -fx-effect: dropshadow( gaussian , rgba(0,0,0,0.2) , 12, 0.0 , 0 , 8 );
+      /*-fx-pref-width: 700;*/
+      
 }
 .auto-complete-popup > .list-view > .virtual-flow > .clipped-container > .sheet > .list-cell {
     -fx-padding: 4 0 4 5;
+      /*-fx-font-size: 1.0em;*/
     /* No alternate highlighting */
+    
     -fx-background: -fx-control-inner-background;
 }
 .auto-complete-popup > .list-view > .virtual-flow > .clipped-container > .sheet > .list-cell:filled:selected {
     -fx-background:  -fx-selection-bar-non-focused;
     -fx-background-color:  -fx-background;
+    
 }
 .auto-complete-popup  > .list-view > .virtual-flow > .clipped-container > .sheet > .list-cell:filled:hover,
 .auto-complete-popup  > .list-view > .virtual-flow > .clipped-container > .sheet > .list-cell:filled:selected:hover {
@@ -275,6 +282,5 @@
 .auto-complete-popup > .list-view > .placeholder > .label {
     -fx-text-fill: derive(-fx-control-inner-background,-30%);
 }
-
 
 
